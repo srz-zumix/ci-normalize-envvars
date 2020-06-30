@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 # ALL Environment Variables
 
 # CUR_DIR=$(cd "$(dirname "${BASH_SOURCE:-${(%):-%N}}")"; pwd)
-# . ${CUR_DIR}/ci-env-git-commit.sh
-# . ${CUR_DIR}/ci-env-name.sh
+# . ${CUR_DIR}/parts/ci-env-git-commit.sh
+# . ${CUR_DIR}/parts/ci-env-name.sh
 
 ci_env_git_commit() {
     if [ -n "${CI_ENV_GIT_COMMIT+x}" ]; then
