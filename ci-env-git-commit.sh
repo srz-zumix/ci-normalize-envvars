@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # CI_ENV_GIT_COMMIT
 
 if [ -n "${CI_ENV_GIT_COMMIT+x}" ]; then

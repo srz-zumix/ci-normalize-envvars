@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # CI_ENV_NAME
 
 if [ -n "${CI_ENV_NAME+x}" ]; then
