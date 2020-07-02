@@ -135,6 +135,14 @@ ci_env_name() {
         return
     fi
 
+    if [ -n "${CI_NAME+x}" ]; then
+        if [ ${CI} = "codeship" ]; then
+            export CODESHIP=true
+            export CI_ENV_NAME="CodeShip"
+            return
+        fi
+    fi
+
     if [ -n "${DRONE+x}" ]; then
         export CI_ENV_NAME="Drone"
         return
