@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # ALL Environment Variables
 
 CUR_DIR=$(cd "$(dirname "${BASH_SOURCE:-${(%):-%N}}")"; pwd)

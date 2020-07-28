@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # ALL Environment Variables
 
 ci_env_git_commit() {

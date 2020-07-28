@@ -3,7 +3,7 @@
 CUR_DIR=$(cd "$(dirname "${BASH_SOURCE:-${(%):-%N}}")"; pwd)
 OUTPUT=${CUR_DIR}/ci-env.sh
 
-echo "#!/bin/sh" > ${OUTPUT}
+echo "#!/bin/bash" > ${OUTPUT}
 echo "# ALL Environment Variables" >> ${OUTPUT}
 echo "" >> ${OUTPUT}
 
