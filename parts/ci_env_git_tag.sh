@@ -19,7 +19,7 @@ fi
 if [ -n "${AZURE_HTTP_USER_AGENT+x}" ]; then
     if echo ${BUILD_SOURCEBRANCH} | grep -q refs/tags/; then
         export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${BUILD_SOURCEBRANCH##refs/tags/}"
+        export CI_ENV_GIT_TAG_NAME=$(echo ${BUILD_SOURCEBRANCH} | sed -e s@refs/.*/@@g)
     fi
     return
 fi
@@ -85,7 +85,7 @@ fi
 if [ -n "${GITHUB_ACTIONS+x}" ]; then
     if echo ${GITHUB_REF} | grep -q refs/tags/; then
         export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${GITHUB_REF##refs/tags/}"
+        export CI_ENV_GIT_TAG_NAME=$(echo ${GITHUB_REF} | sed -e s@refs/.*/@@g)
     fi
     return
 fi
