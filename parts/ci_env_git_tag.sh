@@ -135,7 +135,7 @@ if [ -n "${SHIPPABLE+x}" ]; then
 fi
 
 if [ -n "${TRAVIS+x}" ]; then
-    if [ -n "${TRAVIS_TAG+x}" ]; then
+    if [ -n "${TRAVIS_TAG}" ]; then
         export CI_ENV_GIT_TAG=true
         export CI_ENV_GIT_TAG_NAME="${TRAVIS_TAG}"
     fi
