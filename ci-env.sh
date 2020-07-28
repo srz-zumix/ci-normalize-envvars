@@ -406,7 +406,7 @@ fi
 
 # Travis CI
 if [ -n "${TRAVIS_BRANCH+x}" ]; then
-    if [ -n "${TRAVIS_PULL_REQUEST_BRANCH+x}" ]; then
+    if [ -n "${TRAVIS_PULL_REQUEST_BRANCH}" ]; then
         if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
             export CI_ENV_GIT_SOURCE_BRANCH="${TRAVIS_PULL_REQUEST_BRANCH}"
         fi
@@ -576,7 +576,7 @@ if [ -n "${SHIPPABLE+x}" ]; then
 fi
 
 if [ -n "${TRAVIS+x}" ]; then
-    if [ -n "${TRAVIS_TAG+x}" ]; then
+    if [ -n "${TRAVIS_TAG}" ]; then
         export CI_ENV_GIT_TAG=true
         export CI_ENV_GIT_TAG_NAME="${TRAVIS_TAG}"
     fi
