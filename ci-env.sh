@@ -138,10 +138,10 @@ if [ -n "${BUILD_SOURCEBRANCH+x}" ]; then
         fi
     else
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-            export CI_ENV_GIT_BRANCH="${APPVEYOR_REPO_BRANCH##refs/head/}"
+            export CI_ENV_GIT_BRANCH="${BUILD_SOURCEBRANCH##refs/head/}"
         fi
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-            export CI_ENV_GIT_BASE_BRANCH="${APPVEYOR_REPO_BRANCH##refs/head/}"
+            export CI_ENV_GIT_BASE_BRANCH="${BUILD_SOURCEBRANCH##refs/head/}"
         fi
     fi
     return
@@ -224,10 +224,10 @@ if [ -n "${CIRRUS_BRANCH+x}" ]; then
         fi
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BRANCH="${CIRRUS_BASE_BRANCH}"
+        export CI_ENV_GIT_BRANCH="${CIRRUS_BRANCH}"
     fi
     if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BASE_BRANCH="${CIRRUS_BASE_BRANCH}"
+        export CI_ENV_GIT_BASE_BRANCH="${CIRRUS_BRANCH}"
     fi
     return
 fi
@@ -458,7 +458,7 @@ if [ -n "${APPVEYOR+x}" ]; then
 fi
 
 if [ -n "${AZURE_HTTP_USER_AGENT+x}" ]; then
-    if [[ "${BUILD_SOURCEBRANCH}" =~ refs/tags/.* ]]; then
+    if echo ${BUILD_SOURCEBRANCH} | grep -q refs/tags/; then
         export CI_ENV_GIT_TAG=true
         export CI_ENV_GIT_TAG_NAME="${BUILD_SOURCEBRANCH##refs/tags/}"
     fi
@@ -524,7 +524,7 @@ if [ -n "${DRONE+x}" ]; then
 fi
 
 if [ -n "${GITHUB_ACTIONS+x}" ]; then
-    if [[ "${GITHUB_REF}" =~ refs/tags/.* ]]; then
+    if echo ${GITHUB_REF} | grep -q refs/tags/; then
         export CI_ENV_GIT_TAG=true
         export CI_ENV_GIT_TAG_NAME="${GITHUB_REF##refs/tags/}"
     fi

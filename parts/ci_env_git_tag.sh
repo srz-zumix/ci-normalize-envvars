@@ -17,7 +17,7 @@ if [ -n "${APPVEYOR+x}" ]; then
 fi
 
 if [ -n "${AZURE_HTTP_USER_AGENT+x}" ]; then
-    if [[ "${BUILD_SOURCEBRANCH}" =~ refs/tags/.* ]]; then
+    if echo ${BUILD_SOURCEBRANCH} | grep -q refs/tags/; then
         export CI_ENV_GIT_TAG=true
         export CI_ENV_GIT_TAG_NAME="${BUILD_SOURCEBRANCH##refs/tags/}"
     fi
@@ -83,7 +83,7 @@ if [ -n "${DRONE+x}" ]; then
 fi
 
 if [ -n "${GITHUB_ACTIONS+x}" ]; then
-    if [[ "${GITHUB_REF}" =~ refs/tags/.* ]]; then
+    if echo ${GITHUB_REF} | grep -q refs/tags/; then
         export CI_ENV_GIT_TAG=true
         export CI_ENV_GIT_TAG_NAME="${GITHUB_REF##refs/tags/}"
     fi

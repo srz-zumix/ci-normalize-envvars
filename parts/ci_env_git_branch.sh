@@ -44,10 +44,10 @@ if [ -n "${BUILD_SOURCEBRANCH+x}" ]; then
         fi
     else
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-            export CI_ENV_GIT_BRANCH="${APPVEYOR_REPO_BRANCH##refs/head/}"
+            export CI_ENV_GIT_BRANCH="${BUILD_SOURCEBRANCH##refs/head/}"
         fi
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-            export CI_ENV_GIT_BASE_BRANCH="${APPVEYOR_REPO_BRANCH##refs/head/}"
+            export CI_ENV_GIT_BASE_BRANCH="${BUILD_SOURCEBRANCH##refs/head/}"
         fi
     fi
     return
@@ -130,10 +130,10 @@ if [ -n "${CIRRUS_BRANCH+x}" ]; then
         fi
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BRANCH="${CIRRUS_BASE_BRANCH}"
+        export CI_ENV_GIT_BRANCH="${CIRRUS_BRANCH}"
     fi
     if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BASE_BRANCH="${CIRRUS_BASE_BRANCH}"
+        export CI_ENV_GIT_BASE_BRANCH="${CIRRUS_BRANCH}"
     fi
     return
 fi
