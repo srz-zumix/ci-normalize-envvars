@@ -125,10 +125,10 @@ fi
 if [ -n "${BUILD_SOURCEBRANCH+x}" ]; then
     if [ -n "${SYSTEM_PULLREQUEST_TARGETBRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
-            export CI_ENV_GIT_SOURCE_BRANCH="${SYSTEM_PULLREQUEST_SOURCEBRANCH##refs/head/}"
+            export CI_ENV_GIT_SOURCE_BRANCH=$(echo ${SYSTEM_PULLREQUEST_SOURCEBRANCH} | sed -e s@refs/.*/@@g)
         fi
         if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
-            export CI_ENV_GIT_TARGET_BRANCH="${SYSTEM_PULLREQUEST_TARGETBRANCH##refs/head/}"
+            export CI_ENV_GIT_TARGET_BRANCH=$(echo ${SYSTEM_PULLREQUEST_TARGETBRANCH} | sed -e s@refs/.*/@@g)
         fi
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
             export CI_ENV_GIT_BRANCH="${CI_ENV_GIT_SOURCE_BRANCH}"
@@ -138,10 +138,10 @@ if [ -n "${BUILD_SOURCEBRANCH+x}" ]; then
         fi
     else
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-            export CI_ENV_GIT_BRANCH="${BUILD_SOURCEBRANCH##refs/head/}"
+            export CI_ENV_GIT_BRANCH=$(echo ${BUILD_SOURCEBRANCH} | sed -e s@refs/.*/@@g)
         fi
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-            export CI_ENV_GIT_BASE_BRANCH="${BUILD_SOURCEBRANCH##refs/head/}"
+            export CI_ENV_GIT_BASE_BRANCH=$(echo ${BUILD_SOURCEBRANCH} | sed -e s@refs/.*/@@g)
         fi
     fi
     return
@@ -303,10 +303,10 @@ fi
 if [ -n "${GITHUB_REF+x}" ]; then
     if [ -n "${GITHUB_BASE_REF+x}" ]; then
         if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
-            export CI_ENV_GIT_SOURCE_BRANCH="${GITHUB_HEAD_REF##refs/head/}"
+            export CI_ENV_GIT_SOURCE_BRANCH=$(echo ${GITHUB_HEAD_REF} | sed -e s@refs/.*/@@g)
         fi
         if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
-            export CI_ENV_GIT_TARGET_BRANCH="${GITHUB_BASE_REF##refs/head/}"
+            export CI_ENV_GIT_TARGET_BRANCH=$(echo ${GITHUB_BASE_REF} | sed -e s@refs/.*/@@g)
         fi
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
             export CI_ENV_GIT_BRANCH="${CI_ENV_GIT_SOURCE_BRANCH}"
@@ -316,10 +316,10 @@ if [ -n "${GITHUB_REF+x}" ]; then
         fi
     else
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-            export CI_ENV_GIT_BRANCH="${GITHUB_REF##refs/head/}"
+            export CI_ENV_GIT_BRANCH=$(echo ${GITHUB_REF} | sed -e s@refs/.*/@@g)
         fi
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-            export CI_ENV_GIT_BASE_BRANCH="${GITHUB_REF##refs/head/}"
+            export CI_ENV_GIT_BASE_BRANCH=$(echo ${GITHUB_REF} | sed -e s@refs/.*/@@g)
         fi
     fi
     return
@@ -460,7 +460,7 @@ fi
 if [ -n "${AZURE_HTTP_USER_AGENT+x}" ]; then
     if echo ${BUILD_SOURCEBRANCH} | grep -q refs/tags/; then
         export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${BUILD_SOURCEBRANCH##refs/tags/}"
+        export CI_ENV_GIT_TAG_NAME=$(echo ${BUILD_SOURCEBRANCH} | sed -e s@refs/.*/@@g)
     fi
     return
 fi
@@ -526,7 +526,7 @@ fi
 if [ -n "${GITHUB_ACTIONS+x}" ]; then
     if echo ${GITHUB_REF} | grep -q refs/tags/; then
         export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${GITHUB_REF##refs/tags/}"
+        export CI_ENV_GIT_TAG_NAME=$(echo ${GITHUB_REF} | sed -e s@refs/.*/@@g)
     fi
     return
 fi
