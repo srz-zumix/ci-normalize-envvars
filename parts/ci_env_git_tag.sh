@@ -73,7 +73,7 @@ if [ -n "${CF_BUILD_URL+x}" ]; then
     #     export CI_ENV_GIT_TAG=true
     #     export CI_ENV_GIT_TAG_NAME="${CIRRUS_TAG}"
     # else
-    #     export CI_ENV_GIT_TAG=false
+        export CI_ENV_GIT_TAG=false
     # fi
     return
 fi
@@ -84,7 +84,7 @@ if [ -n "${CI_NAME+x}" ]; then
         #     export CI_ENV_GIT_TAG=true
         #     export CI_ENV_GIT_TAG_NAME="${CIRRUS_TAG}"
         # else
-        #     export CI_ENV_GIT_TAG=false
+            export CI_ENV_GIT_TAG=false
         # fi
         return
     fi
@@ -116,7 +116,7 @@ if [ -n "${BUILD_URL+x}" ]; then
         #     export CI_ENV_GIT_TAG=true
         #     export CI_ENV_GIT_TAG_NAME="${DRONE_TAG}"
         # else
-        #     export CI_ENV_GIT_TAG=false
+            export CI_ENV_GIT_TAG=false
         # fi
         return
     fi
@@ -179,7 +179,7 @@ if [ -n "${WERCKER_RUN_URL+x}" ]; then
     #     export CI_ENV_GIT_TAG=true
     #     export CI_ENV_GIT_TAG_NAME="${TRAVIS_TAG}"
     # else
-    #     export CI_ENV_GIT_TAG=false
+        export CI_ENV_GIT_TAG=false
     # fi
     return
 fi
