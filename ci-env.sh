@@ -101,7 +101,7 @@ ci_env_git_branch() {
 
 # AppVeyor
 if [ -n "${APPVEYOR_REPO_BRANCH+x}" ]; then
-    if [ -n "${APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH+x}" ]; then
+    if [ -n "${APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH}" ]; then
         if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
             export CI_ENV_GIT_SOURCE_BRANCH="${APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH}"
         fi
@@ -109,7 +109,7 @@ if [ -n "${APPVEYOR_REPO_BRANCH+x}" ]; then
             export CI_ENV_GIT_TARGET_BRANCH="${APPVEYOR_REPO_BRANCH}"
         fi
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-            export CI_ENV_GIT_BRANCH="${APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH}"
+            export CI_ENV_GIT_BRANCH="${CI_ENV_GIT_SOURCE_BRANCH}"
         fi
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
@@ -378,15 +378,19 @@ if [ -n "${BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
             export CI_ENV_GIT_TARGET_BRANCH="${BASE_BRANCH}"
         fi
+        if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
+            export CI_ENV_GIT_BRANCH="${CI_ENV_GIT_SOURCE_BRANCH}"
+        fi
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
             export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_TARGET_BRANCH}"
         fi
-    fi
-    if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BRANCH="${BRANCH}"
-    fi
-    if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BASE_BRANCH="${BRANCH}"
+    else
+        if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
+            export CI_ENV_GIT_BRANCH="${BRANCH}"
+        fi
+        if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
+            export CI_ENV_GIT_BASE_BRANCH="${BRANCH}"
+        fi
     fi
     return
 fi
@@ -596,7 +600,7 @@ if [ -n "${SEMAPHORE+x}" ]; then
 fi
 
 if [ -n "${SHIPPABLE+x}" ]; then
-    if [ -n "${GIT_TAG_NAME+x}" ]; then
+    if [ -n "${GIT_TAG_NAME}" ]; then
         export CI_ENV_GIT_TAG=true
         export CI_ENV_GIT_TAG_NAME="${GIT_TAG_NAME}"
     else
