@@ -3,7 +3,7 @@
 # CI_ENV_GIT_TAG_NAME
 
 if [ -n "${CI_ENV_GIT_TAG+x}" ]; then
-    if [ -n "${APPVEYOR_REPO_TAG_NAME+x}" ]; then
+    if [ -n "${CI_ENV_GIT_TAG_NAME+x}" ]; then
         return
     fi
 fi

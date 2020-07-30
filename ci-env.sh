@@ -256,7 +256,7 @@ fi
 
 # CodeShip
 if [ -n "${CI_BRANCH+x}" ]; then
-    if [ -n "${CI_PULL_REQUEST+x}" ]; then
+    if [ "${CI_PULL_REQUEST}" == "true" ]; then
         if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
             export CI_ENV_GIT_SOURCE_BRANCH="${CI_BRANCH}"
         fi
@@ -301,7 +301,7 @@ fi
 
 # GitHub Actions
 if [ -n "${GITHUB_REF+x}" ]; then
-    if [ -n "${GITHUB_BASE_REF+x}" ]; then
+    if [ -n "${GITHUB_BASE_REF}" ]; then
         if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
             export CI_ENV_GIT_SOURCE_BRANCH=$(echo ${GITHUB_HEAD_REF} | sed -e s@refs/.*/@@g)
         fi
@@ -371,9 +371,9 @@ fi
 
 # Shippable
 if [ -n "${BRANCH+x}" ]; then
-    if [ -n "${BASE_BRANCH+x}" ]; then
+    if [ "${IS_PULL_REQUEST}" == "true" ]; then
         if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
-            export CI_ENV_GIT_SOURCE_BRANCH="${BRANCH}"
+            export CI_ENV_GIT_SOURCE_BRANCH="${HEAD_BRANCH}"
         fi
         if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
             export CI_ENV_GIT_TARGET_BRANCH="${BASE_BRANCH}"
@@ -444,7 +444,7 @@ ci_env_git_tag() {
 # CI_ENV_GIT_TAG_NAME
 
 if [ -n "${CI_ENV_GIT_TAG+x}" ]; then
-    if [ -n "${APPVEYOR_REPO_TAG_NAME+x}" ]; then
+    if [ -n "${CI_ENV_GIT_TAG_NAME+x}" ]; then
         return
     fi
 fi
@@ -514,7 +514,7 @@ if [ -n "${CF_BUILD_URL+x}" ]; then
     #     export CI_ENV_GIT_TAG=true
     #     export CI_ENV_GIT_TAG_NAME="${CIRRUS_TAG}"
     # else
-    #     export CI_ENV_GIT_TAG=false
+        export CI_ENV_GIT_TAG=false
     # fi
     return
 fi
@@ -525,7 +525,7 @@ if [ -n "${CI_NAME+x}" ]; then
         #     export CI_ENV_GIT_TAG=true
         #     export CI_ENV_GIT_TAG_NAME="${CIRRUS_TAG}"
         # else
-        #     export CI_ENV_GIT_TAG=false
+            export CI_ENV_GIT_TAG=false
         # fi
         return
     fi
@@ -557,7 +557,7 @@ if [ -n "${BUILD_URL+x}" ]; then
         #     export CI_ENV_GIT_TAG=true
         #     export CI_ENV_GIT_TAG_NAME="${DRONE_TAG}"
         # else
-        #     export CI_ENV_GIT_TAG=false
+            export CI_ENV_GIT_TAG=false
         # fi
         return
     fi
@@ -620,7 +620,7 @@ if [ -n "${WERCKER_RUN_URL+x}" ]; then
     #     export CI_ENV_GIT_TAG=true
     #     export CI_ENV_GIT_TAG_NAME="${TRAVIS_TAG}"
     # else
-    #     export CI_ENV_GIT_TAG=false
+        export CI_ENV_GIT_TAG=false
     # fi
     return
 fi

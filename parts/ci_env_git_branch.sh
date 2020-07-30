@@ -162,7 +162,7 @@ fi
 
 # CodeShip
 if [ -n "${CI_BRANCH+x}" ]; then
-    if [ -n "${CI_PULL_REQUEST+x}" ]; then
+    if [ "${CI_PULL_REQUEST}" == "true" ]; then
         if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
             export CI_ENV_GIT_SOURCE_BRANCH="${CI_BRANCH}"
         fi
@@ -207,7 +207,7 @@ fi
 
 # GitHub Actions
 if [ -n "${GITHUB_REF+x}" ]; then
-    if [ -n "${GITHUB_BASE_REF+x}" ]; then
+    if [ -n "${GITHUB_BASE_REF}" ]; then
         if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
             export CI_ENV_GIT_SOURCE_BRANCH=$(echo ${GITHUB_HEAD_REF} | sed -e s@refs/.*/@@g)
         fi
@@ -277,9 +277,9 @@ fi
 
 # Shippable
 if [ -n "${BRANCH+x}" ]; then
-    if [ -n "${BASE_BRANCH+x}" ]; then
+    if [ "${IS_PULL_REQUEST}" == "true" ]; then
         if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
-            export CI_ENV_GIT_SOURCE_BRANCH="${BRANCH}"
+            export CI_ENV_GIT_SOURCE_BRANCH="${HEAD_BRANCH}"
         fi
         if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
             export CI_ENV_GIT_TARGET_BRANCH="${BASE_BRANCH}"
