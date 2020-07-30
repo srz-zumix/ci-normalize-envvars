@@ -9,7 +9,7 @@ if [ -n "${CI_ENV_GIT_TAG+x}" ]; then
 fi
 
 if [ -n "${APPVEYOR+x}" ]; then
-    if [ -n "${APPVEYOR_REPO_TAG_NAME+x}" ]; then
+    if [ -n "${APPVEYOR_REPO_TAG_NAME}" ]; then
         export CI_ENV_GIT_TAG=true
         export CI_ENV_GIT_TAG_NAME="${APPVEYOR_REPO_TAG_NAME}"
     else
