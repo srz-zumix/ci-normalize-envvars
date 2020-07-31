@@ -124,7 +124,7 @@ fi
 
 if [ -n "${CI+x}" ]; then
     if [ ${CI} = "razorops" ]; then
-        if [ -n "${CI_TAG+x}" ]; then
+        if [ -n "${CI_TAG}" ]; then
             export CI_ENV_GIT_TAG=true
             export CI_ENV_GIT_TAG_NAME="${CI_TAG}"
         else

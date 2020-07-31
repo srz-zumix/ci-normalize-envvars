@@ -305,11 +305,13 @@ fi
 
 # RazorOps
 if [ -n "${CI_REPO_BRANCH+x}" ]; then
+    if [ "${CI_PULL_REQUEST}" != 0 ]; then
+    fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BRANCH="${CI_REPO_BRANCH}"
+        export CI_ENV_GIT_BRANCH="${CI_COMMIT_REF}"
     fi
     if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BASE_BRANCH="${CI_REPO_BRANCH}"
+        export CI_ENV_GIT_BASE_BRANCH="${CI_COMMIT_REF}"
     fi
     return
 fi
