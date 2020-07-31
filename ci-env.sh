@@ -398,8 +398,14 @@ fi
 # Peakflow
 
 # RazorOps
-if [ -n "${CI_REPO_BRANCH+x}" ]; then
+if [ -n "${CI_COMMIT_REF+x}" ]; then
     if [ "${CI_PULL_REQUEST}" != 0 ]; then
+        if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
+            export CI_ENV_GIT_SOURCE_BRANCH="${CI_COMMIT_REF}"
+        fi
+        if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
+            export CI_ENV_GIT_TARGET_BRANCH="${CI_COMMIT_REF}"
+        fi
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
         export CI_ENV_GIT_BRANCH="${CI_COMMIT_REF}"
