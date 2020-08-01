@@ -193,14 +193,14 @@ fi
 
 # CircleCI
 if [ -n "${CIRCLE_BRANCH+x}" ]; then
-    if [ -n "${CIRCLE_PULL_REQUEST+x}" ]; then
-        if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
-            export CI_ENV_GIT_SOURCE_BRANCH="${CIRCLE_BRANCH}"
-        fi
-        if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
-            export CI_ENV_GIT_TARGET_BRANCH="${CIRCLE_BRANCH}"
-        fi
-    fi
+    # if [ -n "${CIRCLE_PULL_REQUEST+x}" ]; then
+    #     if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
+    #         export CI_ENV_GIT_SOURCE_BRANCH="${CIRCLE_BRANCH}"
+    #     fi
+    #     if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
+    #         export CI_ENV_GIT_TARGET_BRANCH="${CIRCLE_BRANCH}"
+    #     fi
+    # fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
         export CI_ENV_GIT_BRANCH="${CIRCLE_BRANCH}"
     fi
