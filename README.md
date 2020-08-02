@@ -29,3 +29,9 @@ Normalize environment variables for CI service
 |(CI Service Name)|true|
 |CI_ENV_NAME|CI Service Name String|
 |CI_ENV_GIT_COMMIT|git commit hash|
+|CI_ENV_GIT_BRANCH|git current branch|
+|CI_ENV_GIT_BASE_BRANCH|git base branch|
+|CI_ENV_GIT_SOURCE_BRANCH|provide only if pull request. (equal to CI_ENV_GIT_BRANCH|
+|CI_ENV_GIT_TARGET_BRANCH|provide only if pull request. (equal to CI_ENV_GIT_BASE_BRANCH)|
+|CI_ENV_GIT_TAG|git tag (true/false)|
+|CI_ENV_GIT_TAG_NAME|git tag name, provide only if CI_ENV_GIT_TAG == true|
