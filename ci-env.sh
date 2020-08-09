@@ -97,7 +97,11 @@ ci_env_git_branch() {
 # CI_ENV_GIT_BASE_BRANCH
 # CI_ENV_GIT_SOURCE_BRANCH: provide only if pull request. (equal to CI_ENV_GIT_BRANCH)
 # CI_ENV_GIT_TARGET_BRANCH: provide only if pull request. (equal to CI_ENV_GIT_BASE_BRANCH)
+# CI_ENV_PULL_REQUEST
 
+if [ -z "${CI_ENV_PULL_REQUEST+x}" ]; then
+    export CI_ENV_PULL_REQUEST=false
+fi
 
 # AppVeyor
 if [ -n "${APPVEYOR_REPO_BRANCH+x}" ]; then
@@ -111,6 +115,7 @@ if [ -n "${APPVEYOR_REPO_BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
             export CI_ENV_GIT_BRANCH="${CI_ENV_GIT_SOURCE_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
         export CI_ENV_GIT_BRANCH="${APPVEYOR_REPO_BRANCH}"
@@ -136,6 +141,7 @@ if [ -n "${BUILD_SOURCEBRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
             export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_TARGET_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     else
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
             export CI_ENV_GIT_BRANCH=$(echo ${BUILD_SOURCEBRANCH} | sed -e s@refs/[^/]*/@@g)
@@ -159,6 +165,7 @@ if [ -n "${BITRISE_GIT_BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
             export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_TARGET_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
         export CI_ENV_GIT_BRANCH="${BITRISE_GIT_BRANCH}"
@@ -181,6 +188,7 @@ if [ -n "${BUDDY_EXECUTION_BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
             export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_TARGET_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
         export CI_ENV_GIT_BRANCH="${BUDDY_EXECUTION_BRANCH}"
@@ -222,6 +230,7 @@ if [ -n "${CIRRUS_BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
             export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_TARGET_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
         export CI_ENV_GIT_BRANCH="${CIRRUS_BRANCH}"
@@ -244,6 +253,7 @@ if [ -n "${CF_BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
             export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_TARGET_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
         export CI_ENV_GIT_BRANCH="${CF_BRANCH}"
@@ -263,6 +273,7 @@ if [ -n "${CI_BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
             export CI_ENV_GIT_TARGET_BRANCH="${CI_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
         export CI_ENV_GIT_BRANCH="${CI_BRANCH}"
@@ -288,6 +299,7 @@ if [ -n "${DRONE_BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
             export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_TARGET_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     else
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
             export CI_ENV_GIT_BRANCH="${DRONE_BRANCH}"
@@ -314,6 +326,7 @@ if [ -n "${GITHUB_REF+x}" ]; then
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
             export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_TARGET_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     else
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
             export CI_ENV_GIT_BRANCH=$(echo ${GITHUB_REF} | sed -e s@refs/[^/]*/@@g)
@@ -337,6 +350,7 @@ if [ -n "${SCRUTINIZER_BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
             export CI_ENV_GIT_BRANCH="${CI_ENV_GIT_SOURCE_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
         export CI_ENV_GIT_BRANCH="${SCRUTINIZER_BRANCH}"
@@ -359,6 +373,7 @@ if [ -n "${SEMAPHORE_GIT_BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
             export CI_ENV_GIT_BRANCH="${CI_ENV_GIT_SOURCE_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
         export CI_ENV_GIT_BRANCH="${SEMAPHORE_GIT_BRANCH}"
@@ -384,6 +399,7 @@ if [ -n "${BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
             export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_TARGET_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     else
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
             export CI_ENV_GIT_BRANCH="${BRANCH}"
@@ -406,6 +422,7 @@ if [ -n "${CI_COMMIT_REF+x}" ]; then
         if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
             export CI_ENV_GIT_TARGET_BRANCH="${CI_COMMIT_REF}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
         export CI_ENV_GIT_BRANCH="${CI_COMMIT_REF}"
@@ -428,6 +445,7 @@ if [ -n "${TRAVIS_BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
             export CI_ENV_GIT_BRANCH="${CI_ENV_GIT_SOURCE_BRANCH}"
         fi
+        export CI_ENV_PULL_REQUEST=true
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
         export CI_ENV_GIT_BRANCH="${TRAVIS_BRANCH}"
