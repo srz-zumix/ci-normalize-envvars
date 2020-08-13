@@ -35,3 +35,4 @@ Normalize environment variables for CI service
 |CI_ENV_GIT_TARGET_BRANCH|provide only if pull request. (equal to CI_ENV_GIT_BASE_BRANCH)|
 |CI_ENV_GIT_TAG|git tag (true/false)|
 |CI_ENV_GIT_TAG_NAME|git tag name, provide only if CI_ENV_GIT_TAG == true|
+|CI_ENV_PULL_REQUEST|is pull requrest|
