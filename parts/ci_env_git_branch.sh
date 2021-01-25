@@ -9,6 +9,29 @@ if [ -z "${CI_ENV_PULL_REQUEST+x}" ]; then
     export CI_ENV_PULL_REQUEST=false
 fi
 
+# Appcircle
+if [ -n "${AC_GIT_BRANCH+x}" ]; then
+    if [ "${AC_GIT_PR}" == "true" ]; then
+        if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
+            export CI_ENV_GIT_SOURCE_BRANCH="${AC_GIT_BRANCH}"
+        fi
+        if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
+            export CI_ENV_GIT_TARGET_BRANCH="${AC_GIT_TARGET_BRANCH}"
+        fi
+        if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
+            export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_SOURCE_BRANCH}"
+        fi
+        export CI_ENV_PULL_REQUEST=true
+    fi
+    if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
+        export CI_ENV_GIT_BRANCH="${AC_GIT_BRANCH}"
+    fi
+    if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
+        export CI_ENV_GIT_BASE_BRANCH="${AC_GIT_BRANCH}"
+    fi
+    return
+fi
+
 # AppVeyor
 if [ -n "${APPVEYOR_REPO_BRANCH+x}" ]; then
     if [ -n "${APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH}" ]; then

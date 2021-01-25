@@ -5,6 +5,11 @@ if [ -n "${CI_ENV_GIT_COMMIT+x}" ]; then
     return
 fi
 
+if [ -n "${AC_GIT_COMMIT+x}" ]; then
+    export CI_ENV_GIT_COMMIT="${AC_GIT_COMMIT}"
+    return
+fi
+
 if [ -n "${APPVEYOR_REPO_COMMIT+x}" ]; then
     export CI_ENV_GIT_COMMIT="${APPVEYOR_REPO_COMMIT}"
     return

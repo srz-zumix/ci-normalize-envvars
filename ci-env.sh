@@ -8,6 +8,11 @@ if [ -n "${CI_ENV_GIT_COMMIT+x}" ]; then
     return
 fi
 
+if [ -n "${AC_GIT_COMMIT+x}" ]; then
+    export CI_ENV_GIT_COMMIT="${AC_GIT_COMMIT}"
+    return
+fi
+
 if [ -n "${APPVEYOR_REPO_COMMIT+x}" ]; then
     export CI_ENV_GIT_COMMIT="${APPVEYOR_REPO_COMMIT}"
     return
@@ -101,6 +106,29 @@ ci_env_git_branch() {
 
 if [ -z "${CI_ENV_PULL_REQUEST+x}" ]; then
     export CI_ENV_PULL_REQUEST=false
+fi
+
+# Appcircle
+if [ -n "${AC_GIT_BRANCH+x}" ]; then
+    if [ "${AC_GIT_PR}" == "true" ]; then
+        if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
+            export CI_ENV_GIT_SOURCE_BRANCH="${AC_GIT_BRANCH}"
+        fi
+        if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
+            export CI_ENV_GIT_TARGET_BRANCH="${AC_GIT_TARGET_BRANCH}"
+        fi
+        if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
+            export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_SOURCE_BRANCH}"
+        fi
+        export CI_ENV_PULL_REQUEST=true
+    fi
+    if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
+        export CI_ENV_GIT_BRANCH="${AC_GIT_BRANCH}"
+    fi
+    if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
+        export CI_ENV_GIT_BASE_BRANCH="${AC_GIT_BRANCH}"
+    fi
+    return
 fi
 
 # AppVeyor
@@ -417,18 +445,18 @@ fi
 if [ -n "${CI_COMMIT_REF+x}" ]; then
     if [ "${CI_PULL_REQUEST}" != 0 ]; then
         if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
-            export CI_ENV_GIT_SOURCE_BRANCH="${CI_COMMIT_REF}"
+            export CI_ENV_GIT_SOURCE_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
         fi
         if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
-            export CI_ENV_GIT_TARGET_BRANCH="${CI_COMMIT_REF}"
+            export CI_ENV_GIT_TARGET_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
         fi
         export CI_ENV_PULL_REQUEST=true
     fi
     if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BRANCH="${CI_COMMIT_REF}"
+        export CI_ENV_GIT_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
     fi
     if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BASE_BRANCH="${CI_COMMIT_REF}"
+        export CI_ENV_GIT_BASE_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
     fi
     return
 fi
@@ -477,6 +505,16 @@ if [ -n "${CI_ENV_GIT_TAG+x}" ]; then
     if [ -n "${CI_ENV_GIT_TAG_NAME+x}" ]; then
         return
     fi
+fi
+
+if [ -n "${+x}" ]; then
+    if [ -n "${AC_COMMIT_TAGS}" ]; then
+        export CI_ENV_GIT_TAG=true
+        export CI_ENV_GIT_TAG_NAME="${AC_COMMIT_TAGS}"
+    else
+        export CI_ENV_GIT_TAG=false
+    fi
+    return
 fi
 
 if [ -n "${APPVEYOR+x}" ]; then
@@ -665,6 +703,11 @@ ci_env_name() {
 # CI_ENV_NAME
 
 if [ -n "${CI_ENV_NAME+x}" ]; then
+    return
+fi
+
+if [ -n "${AC_APPCIRCLE}" ]; then
+    export CI_ENV_NAME="Appcircle"
     return
 fi
 

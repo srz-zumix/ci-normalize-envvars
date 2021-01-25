@@ -5,6 +5,11 @@ if [ -n "${CI_ENV_NAME+x}" ]; then
     return
 fi
 
+if [ -n "${AC_APPCIRCLE}" ]; then
+    export CI_ENV_NAME="Appcircle"
+    return
+fi
+
 if [ -n "${APPVEYOR+x}" ]; then
     export CI_ENV_NAME="AppVeyor"
     return

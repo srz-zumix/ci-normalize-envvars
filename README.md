@@ -4,6 +4,7 @@ Normalize environment variables for CI service
 
 ## Supported CI Services
 
+* [Appcircle](https://appcircle.io/)
 * [AppVeyor](https://www.appveyor.com)
 * [Azure Pipelines](https://azure.microsoft.com/ja-jp/services/devops/pipelines/)
 * [Bitrise](https://www.bitrise.io)
