@@ -8,6 +8,16 @@ if [ -n "${CI_ENV_GIT_TAG+x}" ]; then
     fi
 fi
 
+if [ -n "${+x}" ]; then
+    if [ -n "${AC_COMMIT_TAGS}" ]; then
+        export CI_ENV_GIT_TAG=true
+        export CI_ENV_GIT_TAG_NAME="${AC_COMMIT_TAGS}"
+    else
+        export CI_ENV_GIT_TAG=false
+    fi
+    return
+fi
+
 if [ -n "${APPVEYOR+x}" ]; then
     if [ -n "${APPVEYOR_REPO_TAG_NAME}" ]; then
         export CI_ENV_GIT_TAG=true
