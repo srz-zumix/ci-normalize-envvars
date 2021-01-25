@@ -6,6 +6,7 @@ if [ -n "${CI_ENV_NAME+x}" ]; then
 fi
 
 if [ -n "${AC_APPCIRCLE}" ]; then
+    export APPCIRCLE=true
     export CI_ENV_NAME="Appcircle"
     return
 fi
