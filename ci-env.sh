@@ -507,7 +507,7 @@ if [ -n "${CI_ENV_GIT_TAG+x}" ]; then
     fi
 fi
 
-if [ -n "${+x}" ]; then
+if [ -n "${AC_APPCIRCLE+x}" ]; then
     if [ -n "${AC_COMMIT_TAGS}" ]; then
         export CI_ENV_GIT_TAG=true
         export CI_ENV_GIT_TAG_NAME="${AC_COMMIT_TAGS}"
@@ -707,6 +707,7 @@ if [ -n "${CI_ENV_NAME+x}" ]; then
 fi
 
 if [ -n "${AC_APPCIRCLE}" ]; then
+    export APPCIRCLE=true
     export CI_ENV_NAME="Appcircle"
     return
 fi
