@@ -120,6 +120,13 @@ if [ -n "${GITHUB_ACTIONS+x}" ]; then
     return
 fi
 
+# JFrog Pipelines
+if [ -n "${JFROG_CLI_BUILD_NAME}" ]; then
+    export CI_ENV_GIT_TAG=$(env | grep "res.*_isGitTag" | head -1 | sed "s/.*=//")
+    export CI_ENV_GIT_TAG_NAME=$(env | grep "res.*_gitTagName" | head -1 | sed "s/.*=//")
+    return
+fi
+
 if [ -n "${BUILD_URL+x}" ]; then
     if echo ${BUILD_URL} | grep -q peakflow; then
         # if [ -n "${DRONE_TAG+x}" ]; then
