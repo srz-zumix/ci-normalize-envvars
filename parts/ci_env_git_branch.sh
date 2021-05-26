@@ -267,6 +267,53 @@ if [ -n "${GITHUB_REF+x}" ]; then
     return
 fi
 
+# JFrog Pipelines
+if [ -n "${JFROG_CLI_BUILD_NAME}" ]; then
+    JFROG_GITREPO_IS_PULL_REQUEST=$(env | grep "res.*_isPullRequest" | head -1 | sed "s/.*=//")
+    JFROG_GITREPO_BRANCH=$(env | grep "res.*_branchName" | head -1 | sed "s/.*=//")
+    if ${JFROG_GITREPO_IS_PULL_REQUEST}; then
+        if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
+            export CI_ENV_GIT_SOURCE_BRANCH="${JFROG_GITREPO_BRANCH}"
+        fi
+        if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
+            export CI_ENV_GIT_TARGET_BRANCH=$(env | grep "res.*_pullRequestBaseBranch" | head -1 | sed "s/.*=//")
+        fi
+        if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
+            export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_TARGET_BRANCH}"
+        fi
+        export CI_ENV_PULL_REQUEST=true
+    fi
+    if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
+        export CI_ENV_GIT_BRANCH="${JFROG_GITREPO_BRANCH}"
+    fi
+    if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
+        export CI_ENV_GIT_BASE_BRANCH="${JFROG_GITREPO_BRANCH}"
+    fi
+    return
+fi
+
+# Peakflow
+
+# RazorOps
+if [ -n "${CI_COMMIT_REF+x}" ]; then
+    if [ "${CI_PULL_REQUEST}" != 0 ]; then
+        if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
+            export CI_ENV_GIT_SOURCE_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
+        fi
+        if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
+            export CI_ENV_GIT_TARGET_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
+        fi
+        export CI_ENV_PULL_REQUEST=true
+    fi
+    if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
+        export CI_ENV_GIT_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
+    fi
+    if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
+        export CI_ENV_GIT_BASE_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
+    fi
+    return
+fi
+
 # Scrutinizer
 if [ -n "${SCRUTINIZER_BRANCH+x}" ]; then
     if [ -n "${SCRUTINIZER_PR_SOURCE_BRANCH+x}" ]; then
@@ -336,28 +383,6 @@ if [ -n "${BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
             export CI_ENV_GIT_BASE_BRANCH="${BRANCH}"
         fi
-    fi
-    return
-fi
-
-# Peakflow
-
-# RazorOps
-if [ -n "${CI_COMMIT_REF+x}" ]; then
-    if [ "${CI_PULL_REQUEST}" != 0 ]; then
-        if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
-            export CI_ENV_GIT_SOURCE_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
-        fi
-        if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
-            export CI_ENV_GIT_TARGET_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
-        fi
-        export CI_ENV_PULL_REQUEST=true
-    fi
-    if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
-    fi
-    if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BASE_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
     fi
     return
 fi

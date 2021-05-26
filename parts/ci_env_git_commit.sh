@@ -60,6 +60,18 @@ if [ -n "${GITHUB_SHA+x}" ]; then
     return
 fi
 
+# JFrog Pipelines
+if [ -n "${JFROG_CLI_BUILD_NAME}" ]; then
+    export CI_ENV_GIT_COMMIT=$(env | grep "res.*_commitSha" | head -1 | sed "s/.*=//")
+    return
+fi
+
+# RazorOps
+if [ -n "${COMMIT+x}" ]; then
+    export CI_ENV_GIT_COMMIT="${COMMIT}"
+    return
+fi
+
 if [ -n "${SCRUTINIZER_SHA1+x}" ]; then
     export CI_ENV_GIT_COMMIT="${SCRUTINIZER_SHA1}"
     return
@@ -67,11 +79,6 @@ fi
 
 if [ -n "${SEMAPHORE_GIT_SHA+x}" ]; then
     export CI_ENV_GIT_COMMIT="${SEMAPHORE_GIT_SHA}"
-    return
-fi
-
-if [ -n "${COMMIT+x}" ]; then
-    export CI_ENV_GIT_COMMIT="${COMMIT}"
     return
 fi
 

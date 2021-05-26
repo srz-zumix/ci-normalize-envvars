@@ -66,6 +66,11 @@ if [ -n "${GITHUB_ACTIONS+x}" ]; then
     return
 fi
 
+if [ -n "${JFROG_CLI_BUILD_NAME}" ]; then
+    export CI_ENV_NAME="JFrog Pipelines"
+    return
+fi
+
 if [ -n "${BUILD_URL+x}" ]; then
     if echo ${BUILD_URL} | grep -q peakflow; then
         export PEAKFLOW=true

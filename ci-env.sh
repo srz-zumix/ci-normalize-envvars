@@ -63,6 +63,18 @@ if [ -n "${GITHUB_SHA+x}" ]; then
     return
 fi
 
+# JFrog Pipelines
+if [ -n "${JFROG_CLI_BUILD_NAME}" ]; then
+    export CI_ENV_GIT_COMMIT=$(env | grep "res.*_commitSha" | head -1 | sed "s/.*=//")
+    return
+fi
+
+# RazorOps
+if [ -n "${COMMIT+x}" ]; then
+    export CI_ENV_GIT_COMMIT="${COMMIT}"
+    return
+fi
+
 if [ -n "${SCRUTINIZER_SHA1+x}" ]; then
     export CI_ENV_GIT_COMMIT="${SCRUTINIZER_SHA1}"
     return
@@ -70,11 +82,6 @@ fi
 
 if [ -n "${SEMAPHORE_GIT_SHA+x}" ]; then
     export CI_ENV_GIT_COMMIT="${SEMAPHORE_GIT_SHA}"
-    return
-fi
-
-if [ -n "${COMMIT+x}" ]; then
-    export CI_ENV_GIT_COMMIT="${COMMIT}"
     return
 fi
 
@@ -366,6 +373,53 @@ if [ -n "${GITHUB_REF+x}" ]; then
     return
 fi
 
+# JFrog Pipelines
+if [ -n "${JFROG_CLI_BUILD_NAME}" ]; then
+    JFROG_GITREPO_IS_PULL_REQUEST=$(env | grep "res.*_isPullRequest" | head -1 | sed "s/.*=//")
+    JFROG_GITREPO_BRANCH=$(env | grep "res.*_branchName" | head -1 | sed "s/.*=//")
+    if ${JFROG_GITREPO_IS_PULL_REQUEST}; then
+        if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
+            export CI_ENV_GIT_SOURCE_BRANCH="${JFROG_GITREPO_BRANCH}"
+        fi
+        if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
+            export CI_ENV_GIT_TARGET_BRANCH=$(env | grep "res.*_pullRequestBaseBranch" | head -1 | sed "s/.*=//")
+        fi
+        if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
+            export CI_ENV_GIT_BASE_BRANCH="${CI_ENV_GIT_TARGET_BRANCH}"
+        fi
+        export CI_ENV_PULL_REQUEST=true
+    fi
+    if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
+        export CI_ENV_GIT_BRANCH="${JFROG_GITREPO_BRANCH}"
+    fi
+    if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
+        export CI_ENV_GIT_BASE_BRANCH="${JFROG_GITREPO_BRANCH}"
+    fi
+    return
+fi
+
+# Peakflow
+
+# RazorOps
+if [ -n "${CI_COMMIT_REF+x}" ]; then
+    if [ "${CI_PULL_REQUEST}" != 0 ]; then
+        if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
+            export CI_ENV_GIT_SOURCE_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
+        fi
+        if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
+            export CI_ENV_GIT_TARGET_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
+        fi
+        export CI_ENV_PULL_REQUEST=true
+    fi
+    if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
+        export CI_ENV_GIT_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
+    fi
+    if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
+        export CI_ENV_GIT_BASE_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
+    fi
+    return
+fi
+
 # Scrutinizer
 if [ -n "${SCRUTINIZER_BRANCH+x}" ]; then
     if [ -n "${SCRUTINIZER_PR_SOURCE_BRANCH+x}" ]; then
@@ -435,28 +489,6 @@ if [ -n "${BRANCH+x}" ]; then
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
             export CI_ENV_GIT_BASE_BRANCH="${BRANCH}"
         fi
-    fi
-    return
-fi
-
-# Peakflow
-
-# RazorOps
-if [ -n "${CI_COMMIT_REF+x}" ]; then
-    if [ "${CI_PULL_REQUEST}" != 0 ]; then
-        if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
-            export CI_ENV_GIT_SOURCE_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
-        fi
-        if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
-            export CI_ENV_GIT_TARGET_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
-        fi
-        export CI_ENV_PULL_REQUEST=true
-    fi
-    if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
-    fi
-    if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BASE_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
     fi
     return
 fi
@@ -619,6 +651,12 @@ if [ -n "${GITHUB_ACTIONS+x}" ]; then
     return
 fi
 
+# JFrog Pipelines
+if [ -n "${JFROG_CLI_BUILD_NAME}" ]; then
+    export CI_ENV_GIT_TAG=$(env | grep "res.*_isGitTag" | head -1 | sed "s/.*=//")
+    return
+fi
+
 if [ -n "${BUILD_URL+x}" ]; then
     if echo ${BUILD_URL} | grep -q peakflow; then
         # if [ -n "${DRONE_TAG+x}" ]; then
@@ -764,6 +802,11 @@ fi
 
 if [ -n "${GITHUB_ACTIONS+x}" ]; then
     export CI_ENV_NAME="GitHub Actions"
+    return
+fi
+
+if [ -n "${JFROG_CLI_BUILD_NAME}" ]; then
+    export CI_ENV_NAME="JFrog Pipelines"
     return
 fi
 
