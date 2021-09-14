@@ -66,7 +66,7 @@ if [ -n "${GITHUB_ACTIONS+x}" ]; then
     return
 fi
 
-if [ -n "${JFROG_CLI_BUILD_NAME}" ]; then
+if [ -n "${JFROG_CLI_BUILD_NAME+x}" ]; then
     export CI_ENV_NAME="JFrog Pipelines"
     return
 fi

@@ -268,7 +268,7 @@ if [ -n "${GITHUB_REF+x}" ]; then
 fi
 
 # JFrog Pipelines
-if [ -n "${JFROG_CLI_BUILD_NAME}" ]; then
+if [ -n "${JFROG_CLI_BUILD_NAME+x}" ]; then
     JFROG_GITREPO_IS_PULL_REQUEST=$(env | grep "res.*_isPullRequest" | head -1 | sed "s/.*=//")
     JFROG_GITREPO_BRANCH=$(env | grep "res.*_branchName" | head -1 | sed "s/.*=//")
     if ${JFROG_GITREPO_IS_PULL_REQUEST}; then

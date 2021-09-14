@@ -121,7 +121,7 @@ if [ -n "${GITHUB_ACTIONS+x}" ]; then
 fi
 
 # JFrog Pipelines
-if [ -n "${JFROG_CLI_BUILD_NAME}" ]; then
+if [ -n "${JFROG_CLI_BUILD_NAME+x}" ]; then
     export CI_ENV_GIT_TAG=$(env | grep "res.*_isGitTag" | head -1 | sed "s/.*=//")
     export CI_ENV_GIT_TAG_NAME=$(env | grep "res.*_gitTagName" | head -1 | sed "s/.*=//")
     return
