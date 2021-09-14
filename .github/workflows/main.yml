@@ -18,7 +18,7 @@ jobs:
           git fetch --depth 1 origin "${HEAD_BRANCH}"
       - name: checkout
         run: |
-          git checkout "origin/${HEAD_BRANCH}"
+          git checkout $(echo "${HEAD_BRANCH}" | sed -e s@refs/[^/]*/@@g)
       - name: build
         run: ./build.sh
       - name: commit
