@@ -27,4 +27,4 @@ jobs:
           git commit -m "update all in one [ci skip]" || true
       - name: push
         run: |
-          git push
+          git push origin HEAD
