@@ -16,6 +16,8 @@ jobs:
       - name: fetch
         run: |
           git fetch --depth 1 origin "${HEAD_BRANCH}"
+      - name: checkout
+        run: |
           git checkout "${HEAD_BRANCH}"
       - name: build
         run: ./build.sh
