@@ -1,0 +1,22 @@
+name: GitHub Actions
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: config
+        run: |
+          git config user.name ${{ github.actor }}
+          git config user.email noreply@github.com
+      - name: build
+        run: ./build.sh
+      - name: commit
+        run: |
+          git add -A
+          git commit -m "update all in one [ci skip]" || true
+      - name: push
+        run: |
+          git push
