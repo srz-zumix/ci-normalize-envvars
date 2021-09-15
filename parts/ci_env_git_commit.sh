@@ -61,7 +61,7 @@ if [ -n "${GITHUB_SHA+x}" ]; then
 fi
 
 # JFrog Pipelines
-if [ -n "${JFROG_CLI_BUILD_NAME}" ]; then
+if [ -n "${JFROG_CLI_BUILD_NAME+x}" ]; then
     export CI_ENV_GIT_COMMIT=$(env | grep "res.*_commitSha" | head -1 | sed "s/.*=//")
     return
 fi
