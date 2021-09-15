@@ -7,7 +7,7 @@ echo "#!/bin/bash" > ${OUTPUT}
 echo "# ALL Environment Variables" >> ${OUTPUT}
 echo "" >> ${OUTPUT}
 
-for file in `find ${CUR_DIR}/parts -name \*.sh -maxdepth 1 -type f`; do
+for file in `find ${CUR_DIR}/parts -name \*.sh -maxdepth 1 -type f | sort`; do
     BASENAME=$(basename ${file})
     echo ${BASENAME}
     NAME=${BASENAME%%.sh}
@@ -17,7 +17,7 @@ for file in `find ${CUR_DIR}/parts -name \*.sh -maxdepth 1 -type f`; do
     echo "" >> ${OUTPUT}
 done
 
-for file in `find ${CUR_DIR}/parts -name \*.sh -maxdepth 1 -type f`; do
+for file in `find ${CUR_DIR}/parts -name \*.sh -maxdepth 1 -type f | sort`; do
     BASENAME=$(basename ${file})
     NAME=${BASENAME%%.sh}
     echo ${NAME} >> ${OUTPUT}    
