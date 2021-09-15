@@ -18,7 +18,7 @@ jobs:
           git config user.email noreply@github.com
       - name: fetch
         run: |
-          git fetch --depth 1 origin ${{ steps.branch.outputs.name }}
+          git fetch origin ${{ steps.branch.outputs.name }}
       - name: checkout
         run: |
           git checkout ${{ steps.branch.outputs.name }}
@@ -30,4 +30,4 @@ jobs:
           git commit -m "update all in one [ci skip]" || true
       - name: push
         run: |
-          git push ${{ github.repositoryUrl }} ${{ steps.branch.outputs.name }}
+          git push origin ${{ steps.branch.outputs.name }}
