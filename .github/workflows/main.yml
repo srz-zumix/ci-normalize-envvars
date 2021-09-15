@@ -30,4 +30,4 @@ jobs:
           git commit -m "update all in one [ci skip]" || true
       - name: push
         run: |
-          git push origin ${{ steps.branch.outputs.name }}
+          git push ${{ github.repositoryUrl }} ${{ steps.branch.outputs.name }}
