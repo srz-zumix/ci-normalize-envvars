@@ -23,6 +23,7 @@ jobs:
         run: ./build.sh
       - name: commit
         run: |
+          git diff
           git add -A
           git commit -m "update all in one [ci skip]" || true
           git log -1
