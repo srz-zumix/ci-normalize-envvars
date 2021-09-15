@@ -11,11 +11,11 @@ jobs:
       - uses: actions/checkout@v1
       - id: branch
         run: |
-          echo "::set-output name=name::$(echo "${HEAD_BRANCH}" | sed -e s@refs/[^/]*/@@g)"
+          echo "::set-output name=name::$(echo "${HEAD_BRANCH//refs\/[^\/]*\//}"
       - name: config
         run: |
-          git config user.name ${{ github.actor }}
-          git config user.email noreply@github.com
+          git config --global user.name ${{ github.actor }}
+          git config --global user.email noreply@github.com
       - name: fetch
         run: |
           git fetch origin ${{ steps.branch.outputs.name }}
