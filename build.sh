@@ -9,7 +9,7 @@ OUTPUT="${CUR_DIR}/ci-env.sh"
     echo ""
 } > "${OUTPUT}"
 
-for file in `find "${CUR_DIR}/parts" -name \*.sh -maxdepth 1 -type f | sort`; do
+for file in $(find "${CUR_DIR}/parts" -name \*.sh -maxdepth 1 -type f | sort); do
     BASENAME=$(basename "${file}")
     echo "${BASENAME}"
     NAME="${BASENAME%%.sh}"
@@ -21,7 +21,7 @@ for file in `find "${CUR_DIR}/parts" -name \*.sh -maxdepth 1 -type f | sort`; do
     } >> "${OUTPUT}"
 done
 
-for file in `find "${CUR_DIR}/parts" -name \*.sh -maxdepth 1 -type f | sort`; do
+for file in $(find "${CUR_DIR}/parts" -name \*.sh -maxdepth 1 -type f | sort); do
     BASENAME=$(basename "${file}")
     NAME="${BASENAME%%.sh}"
     echo "${NAME}" >> "${OUTPUT}" 
