@@ -416,7 +416,11 @@ detect_git_branch() {
 }
 
 detect_git_branch
-export CI_ENV_GIT_BASE_BRANCH
+
+export CI_ENV_GIT_BRANCH
+export CI_ENV_GIT_SOURCE_BRANCH
+export CI_ENV_GIT_TARGET_BRANCH
+export CI_ENV_PULL_REQUEST
 }
 
 ci_env_git_commit() {
@@ -526,318 +530,337 @@ ci_env_git_tag() {
 # CI_ENV_GIT_TAG
 # CI_ENV_GIT_TAG_NAME
 
-if [ -n "${CI_ENV_GIT_TAG+x}" ]; then
-    if [ -n "${CI_ENV_GIT_TAG_NAME+x}" ]; then
-        return
+detect_git_tag() {
+    if [ -n "${CI_ENV_GIT_TAG+x}" ]; then
+        if [ -n "${CI_ENV_GIT_TAG_NAME+x}" ]; then
+            return
+        fi
     fi
-fi
 
-if [ -n "${AC_APPCIRCLE+x}" ]; then
-    if [ -n "${AC_COMMIT_TAGS}" ]; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${AC_COMMIT_TAGS}"
-    else
-        export CI_ENV_GIT_TAG=false
-    fi
-    return
-fi
-
-if [ -n "${APPVEYOR+x}" ]; then
-    if [ -n "${APPVEYOR_REPO_TAG_NAME}" ]; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${APPVEYOR_REPO_TAG_NAME}"
-    else
-        export CI_ENV_GIT_TAG=false
-    fi
-    return
-fi
-
-if [ -n "${AZURE_HTTP_USER_AGENT+x}" ]; then
-    if echo ${BUILD_SOURCEBRANCH} | grep -q refs/tags/; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME=$(echo ${BUILD_SOURCEBRANCH} | sed -e s@refs/.*/@@g)
-    else
-        export CI_ENV_GIT_TAG=false
-    fi
-    return
-fi
-
-if [ -n "${BITRISE_IO+x}" ]; then
-    if [ -n "${BITRISE_GIT_TAG+x}" ]; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${BITRISE_GIT_TAG}"
-    else
-        export CI_ENV_GIT_TAG=false
-    fi
-    return
-fi
-
-if [ -n "${BUDDY+x}" ]; then
-    if [ -n "${BUDDY_EXECUTION_TAG+x}" ]; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${BUDDY_EXECUTION_TAG}"
-    else
-        export CI_ENV_GIT_TAG=false
-    fi
-    return
-fi
-
-if [ -n "${CIRCLECI+x}" ]; then
-    if [ -n "${CIRCLE_TAG+x}" ]; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${CIRCLE_TAG}"
-    else
-        export CI_ENV_GIT_TAG=false
-    fi
-    return
-fi
-
-if [ -n "${CIRRUS_CI+x}" ]; then
-    if [ -n "${CIRRUS_TAG+x}" ]; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${CIRRUS_TAG}"
-    else
-        export CI_ENV_GIT_TAG=false
-    fi
-    return
-fi
-
-if [ -n "${CF_BUILD_URL+x}" ]; then
-    # if [ -n "${CIRRUS_TAG+x}" ]; then
-    #     export CI_ENV_GIT_TAG=true
-    #     export CI_ENV_GIT_TAG_NAME="${CIRRUS_TAG}"
-    # else
-        export CI_ENV_GIT_TAG=false
-    # fi
-    return
-fi
-
-if [ -n "${CI_NAME+x}" ]; then
-    if [ ${CI_NAME} = "codeship" ]; then
-        # if [ -n "${CIRRUS_TAG+x}" ]; then
-        #     export CI_ENV_GIT_TAG=true
-        #     export CI_ENV_GIT_TAG_NAME="${CIRRUS_TAG}"
-        # else
-            export CI_ENV_GIT_TAG=false
-        # fi
-        return
-    fi
-fi
-
-if [ -n "${DRONE+x}" ]; then
-    if [ -n "${DRONE_TAG+x}" ]; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${DRONE_TAG}"
-    else
-        export CI_ENV_GIT_TAG=false
-    fi
-    return
-fi
-
-if [ -n "${GITHUB_ACTIONS+x}" ]; then
-    if echo ${GITHUB_REF} | grep -q refs/tags/; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME=$(echo ${GITHUB_REF} | sed -e s@refs/.*/@@g)
-    else
-        export CI_ENV_GIT_TAG=false
-    fi
-    return
-fi
-
-# JFrog Pipelines
-if [ -n "${JFROG_CLI_BUILD_NAME+x}" ]; then
-    CI_ENV_GIT_TAG=$(env | grep "res.*_isGitTag" | head -1 | sed "s/.*=//")
-    CI_ENV_GIT_TAG_NAME=$(env | grep "res.*_gitTagName" | head -1 | sed "s/.*=//")
-    export CI_ENV_GIT_TAG
-    export CI_ENV_GIT_TAG_NAME
-    return
-fi
-
-if [ -n "${BUILD_URL+x}" ]; then
-    if echo ${BUILD_URL} | grep -q peakflow; then
-        # if [ -n "${DRONE_TAG+x}" ]; then
-        #     export CI_ENV_GIT_TAG=true
-        #     export CI_ENV_GIT_TAG_NAME="${DRONE_TAG}"
-        # else
-            export CI_ENV_GIT_TAG=false
-        # fi
-        return
-    fi
-fi
-
-if [ -n "${CI+x}" ]; then
-    if [ ${CI} = "razorops" ]; then
-        if [ -n "${CI_TAG}" ]; then
-            export CI_ENV_GIT_TAG=true
-            export CI_ENV_GIT_TAG_NAME="${CI_TAG}"
+    if [ -n "${AC_APPCIRCLE+x}" ]; then
+        if [ -n "${AC_COMMIT_TAGS}" ]; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME="${AC_COMMIT_TAGS}"
         else
-            export CI_ENV_GIT_TAG=false
+            CI_ENV_GIT_TAG=false
         fi
         return
     fi
-fi
 
-if [ -n "${SCRUTINIZER+x}" ]; then
-    if [ -n "${CI_TAG+x}" ]; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${CI_TAG}"
-    else
-        export CI_ENV_GIT_TAG=false
+    if [ -n "${APPVEYOR+x}" ]; then
+        if [ -n "${APPVEYOR_REPO_TAG_NAME}" ]; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME="${APPVEYOR_REPO_TAG_NAME}"
+        else
+            CI_ENV_GIT_TAG=false
+        fi
+        return
     fi
-    return
-fi
 
-if [ -n "${SEMAPHORE+x}" ]; then
-    if [ -n "${SEMAPHORE_GIT_TAG_NAME+x}" ]; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${SEMAPHORE_GIT_TAG_NAME}"
-    else
-        export CI_ENV_GIT_TAG=false
+    if [ -n "${AZURE_HTTP_USER_AGENT+x}" ]; then
+        if echo ${BUILD_SOURCEBRANCH} | grep -q refs/tags/; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME=$(echo ${BUILD_SOURCEBRANCH} | sed -e s@refs/.*/@@g)
+        else
+            CI_ENV_GIT_TAG=false
+        fi
+        return
     fi
-    return
-fi
 
-if [ -n "${SHIPPABLE+x}" ]; then
-    if [ -n "${GIT_TAG_NAME}" ]; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${GIT_TAG_NAME}"
-    else
-        export CI_ENV_GIT_TAG=false
+    if [ -n "${BITRISE_IO+x}" ]; then
+        if [ -n "${BITRISE_GIT_TAG+x}" ]; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME="${BITRISE_GIT_TAG}"
+        else
+            CI_ENV_GIT_TAG=false
+        fi
+        return
     fi
-    return
-fi
 
-if [ -n "${TRAVIS+x}" ]; then
-    if [ -n "${TRAVIS_TAG}" ]; then
-        export CI_ENV_GIT_TAG=true
-        export CI_ENV_GIT_TAG_NAME="${TRAVIS_TAG}"
-    else
-        export CI_ENV_GIT_TAG=false
+    if [ -n "${BUDDY+x}" ]; then
+        if [ -n "${BUDDY_EXECUTION_TAG+x}" ]; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME="${BUDDY_EXECUTION_TAG}"
+        else
+            CI_ENV_GIT_TAG=false
+        fi
+        return
     fi
-    return
-fi
+
+    if [ -n "${CIRCLECI+x}" ]; then
+        if [ -n "${CIRCLE_TAG+x}" ]; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME="${CIRCLE_TAG}"
+        else
+            CI_ENV_GIT_TAG=false
+        fi
+        return
+    fi
+
+    if [ -n "${CIRRUS_CI+x}" ]; then
+        if [ -n "${CIRRUS_TAG+x}" ]; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME="${CIRRUS_TAG}"
+        else
+            CI_ENV_GIT_TAG=false
+        fi
+        return
+    fi
+
+    if [ -n "${CF_BUILD_URL+x}" ]; then
+        # if [ -n "${CIRRUS_TAG+x}" ]; then
+        #     CI_ENV_GIT_TAG=true
+        #     CI_ENV_GIT_TAG_NAME="${CIRRUS_TAG}"
+        # else
+            CI_ENV_GIT_TAG=false
+        # fi
+        return
+    fi
+
+    if [ -n "${CI_NAME+x}" ]; then
+        if [ ${CI_NAME} = "codeship" ]; then
+            # if [ -n "${CIRRUS_TAG+x}" ]; then
+            #     CI_ENV_GIT_TAG=true
+            #     CI_ENV_GIT_TAG_NAME="${CIRRUS_TAG}"
+            # else
+                CI_ENV_GIT_TAG=false
+            # fi
+            return
+        fi
+    fi
+
+    if [ -n "${DRONE+x}" ]; then
+        if [ -n "${DRONE_TAG+x}" ]; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME="${DRONE_TAG}"
+        else
+            CI_ENV_GIT_TAG=false
+        fi
+        return
+    fi
+
+    if [ -n "${GITHUB_ACTIONS+x}" ]; then
+        if echo ${GITHUB_REF} | grep -q refs/tags/; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME=$(echo ${GITHUB_REF} | sed -e s@refs/.*/@@g)
+        else
+            CI_ENV_GIT_TAG=false
+        fi
+        return
+    fi
+
+    # JFrog Pipelines
+    if [ -n "${JFROG_CLI_BUILD_NAME+x}" ]; then
+        CI_ENV_GIT_TAG=$(env | grep "res.*_isGitTag" | head -1 | sed "s/.*=//")
+        CI_ENV_GIT_TAG_NAME=$(env | grep "res.*_gitTagName" | head -1 | sed "s/.*=//")
+        CI_ENV_GIT_TAG
+        CI_ENV_GIT_TAG_NAME
+        return
+    fi
+
+    if [ -n "${BUILD_URL+x}" ]; then
+        if echo ${BUILD_URL} | grep -q peakflow; then
+            # if [ -n "${DRONE_TAG+x}" ]; then
+            #     CI_ENV_GIT_TAG=true
+            #     CI_ENV_GIT_TAG_NAME="${DRONE_TAG}"
+            # else
+                CI_ENV_GIT_TAG=false
+            # fi
+            return
+        fi
+    fi
+
+    if [ -n "${CI+x}" ]; then
+        if [ ${CI} = "razorops" ]; then
+            if [ -n "${CI_TAG}" ]; then
+                CI_ENV_GIT_TAG=true
+                CI_ENV_GIT_TAG_NAME="${CI_TAG}"
+            else
+                CI_ENV_GIT_TAG=false
+            fi
+            return
+        fi
+    fi
+
+    if [ -n "${SCRUTINIZER+x}" ]; then
+        if [ -n "${CI_TAG+x}" ]; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME="${CI_TAG}"
+        else
+            CI_ENV_GIT_TAG=false
+        fi
+        return
+    fi
+
+    if [ -n "${SEMAPHORE+x}" ]; then
+        if [ -n "${SEMAPHORE_GIT_TAG_NAME+x}" ]; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME="${SEMAPHORE_GIT_TAG_NAME}"
+        else
+            CI_ENV_GIT_TAG=false
+        fi
+        return
+    fi
+
+    if [ -n "${SHIPPABLE+x}" ]; then
+        if [ -n "${GIT_TAG_NAME}" ]; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME="${GIT_TAG_NAME}"
+        else
+            CI_ENV_GIT_TAG=false
+        fi
+        return
+    fi
+
+    if [ -n "${TRAVIS+x}" ]; then
+        if [ -n "${TRAVIS_TAG}" ]; then
+            CI_ENV_GIT_TAG=true
+            CI_ENV_GIT_TAG_NAME="${TRAVIS_TAG}"
+        else
+            CI_ENV_GIT_TAG=false
+        fi
+        return
+    fi
 
 
-if [ -z "${CI_ENV_GIT_TAG+x}" ]; then
-    export CI_ENV_GIT_TAG=false
-fi
+    if [ -z "${CI_ENV_GIT_TAG+x}" ]; then
+        CI_ENV_GIT_TAG=false
+    fi
+}
+
+detect_git_tag
+
+export CI_ENV_GIT_TAG
+export CI_ENV_GIT_TAG_NAME
 }
 
 ci_env_name() {
 # CI_ENV_NAME
 
-if [ -n "${CI_ENV_NAME+x}" ]; then
-    return
-fi
-
-if [ -n "${AC_APPCIRCLE+x}" ]; then
-    export APPCIRCLE=true
-    export CI_ENV_NAME="Appcircle"
-    return
-fi
-
-if [ -n "${APPVEYOR+x}" ]; then
-    export CI_ENV_NAME="AppVeyor"
-    return
-fi
-
-if [ -n "${AZURE_HTTP_USER_AGENT+x}" ]; then
-    export AZURE_PIPELINES=true
-    export CI_ENV_NAME="Azure Pipelines"
-    return
-fi
-
-if [ -n "${BITRISE_IO+x}" ]; then
-    export CI_ENV_NAME="Bitrise"
-    return
-fi
-
-if [ -n "${BUDDY+x}" ]; then
-    export CI_ENV_NAME="Buddy"
-    return
-fi
-
-if [ -n "${CIRCLECI+x}" ]; then
-    export CI_ENV_NAME="CircleCI"
-    return
-fi
-
-if [ -n "${CIRRUS_CI+x}" ]; then
-    export CI_ENV_NAME="Cirrus CI"
-    return
-fi
-
-if [ -n "${CF_BUILD_URL+x}" ]; then
-    export CODEFRESH=true
-    export CI_ENV_NAME="Codefresh"
-    return
-fi
-
-if [ -n "${CI_NAME+x}" ]; then
-    if [ ${CI_NAME} = "codeship" ]; then
-        export CODESHIP=true
-        export CI_ENV_NAME="CodeShip"
+detect_git_tag() {
+    if [ -n "${CI_ENV_NAME+x}" ]; then
         return
     fi
-fi
 
-if [ -n "${DRONE+x}" ]; then
-    export CI_ENV_NAME="Drone"
-    return
-fi
-
-if [ -n "${GITHUB_ACTIONS+x}" ]; then
-    export CI_ENV_NAME="GitHub Actions"
-    return
-fi
-
-if [ -n "${JFROG_CLI_BUILD_NAME+x}" ]; then
-    export CI_ENV_NAME="JFrog Pipelines"
-    return
-fi
-
-if [ -n "${BUILD_URL+x}" ]; then
-    if echo ${BUILD_URL} | grep -q peakflow; then
-        export PEAKFLOW=true
-        export CI_ENV_NAME="Peakflow"
+    if [ -n "${AC_APPCIRCLE+x}" ]; then
+        APPCIRCLE=true
+        export APPCIRCLE
+        CI_ENV_NAME="Appcircle"
         return
     fi
-fi
 
-if [ -n "${CI+x}" ]; then
-    if [ ${CI} = "razorops" ]; then
-        export RAZOROPS=true
-        export CI_ENV_NAME="Razorops"
+    if [ -n "${APPVEYOR+x}" ]; then
+        CI_ENV_NAME="AppVeyor"
         return
     fi
-fi
 
-if [ -n "${SCRUTINIZER+x}" ]; then
-    export CI_ENV_NAME="Scrutinizer"
-    return
-fi
+    if [ -n "${AZURE_HTTP_USER_AGENT+x}" ]; then
+        AZURE_PIPELINES=true
+        export AZURE_PIPELINES
+        CI_ENV_NAME="Azure Pipelines"
+        return
+    fi
 
-if [ -n "${SEMAPHORE+x}" ]; then
-    export CI_ENV_NAME="Semaphore"
-    return
-fi
+    if [ -n "${BITRISE_IO+x}" ]; then
+        CI_ENV_NAME="Bitrise"
+        return
+    fi
 
-if [ -n "${SHIPPABLE+x}" ]; then
-    export CI_ENV_NAME="Shippable"
-    return
-fi
+    if [ -n "${BUDDY+x}" ]; then
+        CI_ENV_NAME="Buddy"
+        return
+    fi
 
-if [ -n "${TRAVIS+x}" ]; then
-    export CI_ENV_NAME="Travis CI"
-    return
-fi
+    if [ -n "${CIRCLECI+x}" ]; then
+        CI_ENV_NAME="CircleCI"
+        return
+    fi
+
+    if [ -n "${CIRRUS_CI+x}" ]; then
+        CI_ENV_NAME="Cirrus CI"
+        return
+    fi
+
+    if [ -n "${CF_BUILD_URL+x}" ]; then
+        CODEFRESH=true
+        export CODEFRESH
+        CI_ENV_NAME="Codefresh"
+        return
+    fi
+
+    if [ -n "${CI_NAME+x}" ]; then
+        if [ ${CI_NAME} = "codeship" ]; then
+            CODESHIP=true
+            export CODESHIP
+            CI_ENV_NAME="CodeShip"
+            return
+        fi
+    fi
+
+    if [ -n "${DRONE+x}" ]; then
+        CI_ENV_NAME="Drone"
+        return
+    fi
+
+    if [ -n "${GITHUB_ACTIONS+x}" ]; then
+        CI_ENV_NAME="GitHub Actions"
+        return
+    fi
+
+    if [ -n "${JFROG_CLI_BUILD_NAME+x}" ]; then
+        CI_ENV_NAME="JFrog Pipelines"
+        return
+    fi
+
+    if [ -n "${BUILD_URL+x}" ]; then
+        if echo ${BUILD_URL} | grep -q peakflow; then
+            PEAKFLOW=true
+            export PEAKFLOW
+            CI_ENV_NAME="Peakflow"
+            return
+        fi
+    fi
+
+    if [ -n "${CI+x}" ]; then
+        if [ ${CI} = "razorops" ]; then
+            RAZOROPS=true
+            export RAZOROPS
+            CI_ENV_NAME="Razorops"
+            return
+        fi
+    fi
+
+    if [ -n "${SCRUTINIZER+x}" ]; then
+        CI_ENV_NAME="Scrutinizer"
+        return
+    fi
+
+    if [ -n "${SEMAPHORE+x}" ]; then
+        CI_ENV_NAME="Semaphore"
+        return
+    fi
+
+    if [ -n "${SHIPPABLE+x}" ]; then
+        CI_ENV_NAME="Shippable"
+        return
+    fi
+
+    if [ -n "${TRAVIS+x}" ]; then
+        CI_ENV_NAME="Travis CI"
+        return
+    fi
 
 
-if [ -z "${CI+x}" ]; then
-    export CI_ENV_NAME="local"
-    return
-fi
-export CI_ENV_NAME=$1
+    if [ -z "${CI+x}" ]; then
+        CI_ENV_NAME="local"
+        return
+    fi
+    CI_ENV_NAME="${1:-}"
+}
+
+detect_git_tag "$@"
+
+export CI_ENV_NAME
 }
 
 ci_env_git_branch

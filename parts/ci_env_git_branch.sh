@@ -413,4 +413,8 @@ detect_git_branch() {
 }
 
 detect_git_branch
-export CI_ENV_GIT_BASE_BRANCH
+
+export CI_ENV_GIT_BRANCH
+export CI_ENV_GIT_SOURCE_BRANCH
+export CI_ENV_GIT_TARGET_BRANCH
+export CI_ENV_PULL_REQUEST
