@@ -60,10 +60,10 @@ detect_git_branch() {
     if [ -n "${BUILD_SOURCEBRANCH+x}" ]; then
         if [ -n "${SYSTEM_PULLREQUEST_TARGETBRANCH+x}" ]; then
             if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
-                CI_ENV_GIT_SOURCE_BRANCH=$(echo ${SYSTEM_PULLREQUEST_SOURCEBRANCH} | sed -e s@refs/[^/]*/@@g)
+                CI_ENV_GIT_SOURCE_BRANCH=$(echo "${SYSTEM_PULLREQUEST_SOURCEBRANCH}" | sed -e s@refs/[^/]*/@@g)
             fi
             if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
-                CI_ENV_GIT_TARGET_BRANCH=$(echo ${SYSTEM_PULLREQUEST_TARGETBRANCH} | sed -e s@refs/[^/]*/@@g)
+                CI_ENV_GIT_TARGET_BRANCH=$(echo "${SYSTEM_PULLREQUEST_TARGETBRANCH}" | sed -e s@refs/[^/]*/@@g)
             fi
             if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
                 CI_ENV_GIT_BRANCH="${CI_ENV_GIT_SOURCE_BRANCH}"
@@ -74,10 +74,10 @@ detect_git_branch() {
             CI_ENV_PULL_REQUEST=true
         else
             if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-                CI_ENV_GIT_BRANCH=$(echo ${BUILD_SOURCEBRANCH} | sed -e s@refs/[^/]*/@@g)
+                CI_ENV_GIT_BRANCH=$(echo "${BUILD_SOURCEBRANCH}" | sed -e s@refs/[^/]*/@@g)
             fi
             if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-                CI_ENV_GIT_BASE_BRANCH=$(echo ${BUILD_SOURCEBRANCH} | sed -e s@refs/[^/]*/@@g)
+                CI_ENV_GIT_BASE_BRANCH=$(echo "${BUILD_SOURCEBRANCH}" | sed -e s@refs/[^/]*/@@g)
             fi
         fi
         return
@@ -245,10 +245,10 @@ detect_git_branch() {
     if [ -n "${GITHUB_REF+x}" ]; then
         if [ -n "${GITHUB_BASE_REF}" ]; then
             if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
-                CI_ENV_GIT_SOURCE_BRANCH=$(echo ${GITHUB_HEAD_REF} | sed -e s@refs/[^/]*/@@g)
+                CI_ENV_GIT_SOURCE_BRANCH=$(echo "${GITHUB_HEAD_REF}" | sed -e s@refs/[^/]*/@@g)
             fi
             if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
-                CI_ENV_GIT_TARGET_BRANCH=$(echo ${GITHUB_BASE_REF} | sed -e s@refs/[^/]*/@@g)
+                CI_ENV_GIT_TARGET_BRANCH=$(echo "${GITHUB_BASE_REF}" | sed -e s@refs/[^/]*/@@g)
             fi
             if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
                 CI_ENV_GIT_BRANCH="${CI_ENV_GIT_SOURCE_BRANCH}"
@@ -259,10 +259,10 @@ detect_git_branch() {
             CI_ENV_PULL_REQUEST=true
         else
             if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-                CI_ENV_GIT_BRANCH=$(echo ${GITHUB_REF} | sed -e s@refs/[^/]*/@@g)
+                CI_ENV_GIT_BRANCH=$(echo "${GITHUB_REF}" | sed -e s@refs/[^/]*/@@g)
             fi
             if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-                CI_ENV_GIT_BASE_BRANCH=$(echo ${GITHUB_REF} | sed -e s@refs/[^/]*/@@g)
+                CI_ENV_GIT_BASE_BRANCH=$(echo "${GITHUB_REF}" | sed -e s@refs/[^/]*/@@g)
             fi
         fi
         return
@@ -299,18 +299,18 @@ detect_git_branch() {
     if [ -n "${CI_COMMIT_REF+x}" ]; then
         if [ "${CI_PULL_REQUEST}" != 0 ]; then
             if [ -z "${CI_ENV_GIT_SOURCE_BRANCH+x}" ]; then
-                CI_ENV_GIT_SOURCE_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
+                CI_ENV_GIT_SOURCE_BRANCH=$(echo "${CI_COMMIT_REF}" | sed -e s@refs/[^/]*/@@g)
             fi
             if [ -z "${CI_ENV_GIT_TARGET_BRANCH+x}" ]; then
-                CI_ENV_GIT_TARGET_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
+                CI_ENV_GIT_TARGET_BRANCH=$(echo "${CI_COMMIT_REF}" | sed -e s@refs/[^/]*/@@g)
             fi
             CI_ENV_PULL_REQUEST=true
         fi
         if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-            CI_ENV_GIT_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
+            CI_ENV_GIT_BRANCH=$(echo "${CI_COMMIT_REF}" | sed -e s@refs/[^/]*/@@g)
         fi
         if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-            CI_ENV_GIT_BASE_BRANCH=$(echo ${CI_COMMIT_REF} | sed -e s@refs/[^/]*/@@g)
+            CI_ENV_GIT_BASE_BRANCH=$(echo "${CI_COMMIT_REF}" | sed -e s@refs/[^/]*/@@g)
         fi
         return
     fi
