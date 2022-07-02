@@ -25,7 +25,7 @@ for file in $(find "${CUR_DIR}/parts" -name \*.sh -maxdepth 1 -type f | sort); d
     BASENAME=$(basename "${file}")
     NAME="${BASENAME%%.sh}"
     {
-        echo "# shellcheck disable=SC2120"
+        echo "# shellcheck disable=SC2119,SC2120"
         echo "${NAME}"
     } >> "${OUTPUT}" 
 done

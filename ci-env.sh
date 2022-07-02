@@ -863,12 +863,12 @@ detect_git_tag "$@"
 export CI_ENV_NAME
 }
 
-# shellcheck disable=SC2120
+# shellcheck disable=SC2119,SC2120
 ci_env_git_branch
-# shellcheck disable=SC2120
+# shellcheck disable=SC2119,SC2120
 ci_env_git_commit
-# shellcheck disable=SC2120
+# shellcheck disable=SC2119,SC2120
 ci_env_git_tag
-# shellcheck disable=SC2120
+# shellcheck disable=SC2119,SC2120
 ci_env_name
 export CI=true
