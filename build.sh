@@ -24,7 +24,10 @@ done
 for file in $(find "${CUR_DIR}/parts" -name \*.sh -maxdepth 1 -type f | sort); do
     BASENAME=$(basename "${file}")
     NAME="${BASENAME%%.sh}"
-    echo "${NAME}" >> "${OUTPUT}" 
+    {
+        echo "# shellcheck disable=SC2119,SC2120"
+        echo "${NAME}"
+    } >> "${OUTPUT}" 
 done
 
 echo export CI=true >> "${OUTPUT}"
