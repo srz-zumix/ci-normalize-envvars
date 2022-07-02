@@ -659,7 +659,7 @@ detect_git_tag() {
     fi
 
     if [ -n "${BUILD_URL+x}" ]; then
-        if echo ${BUILD_URL} | grep -q peakflow; then
+        if echo "${BUILD_URL}" | grep -q peakflow; then
             # if [ -n "${DRONE_TAG+x}" ]; then
             #     CI_ENV_GIT_TAG=true
             #     CI_ENV_GIT_TAG_NAME="${DRONE_TAG}"
@@ -671,7 +671,7 @@ detect_git_tag() {
     fi
 
     if [ -n "${CI+x}" ]; then
-        if [ ${CI} = "razorops" ]; then
+        if [ "${CI}" = "razorops" ]; then
             if [ -n "${CI_TAG}" ]; then
                 CI_ENV_GIT_TAG=true
                 CI_ENV_GIT_TAG_NAME="${CI_TAG}"
