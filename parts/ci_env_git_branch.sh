@@ -410,14 +410,3 @@ if [ -n "${TRAVIS_BRANCH+x}" ]; then
     return
 fi
 
-# Wercker
-if [ -n "${WERCKER_GIT_BRANCH+x}" ]; then
-    if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BRANCH="${WERCKER_GIT_BRANCH}"
-    fi
-    if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BASE_BRANCH="${WERCKER_GIT_BRANCH}"
-    fi
-    return
-fi
-

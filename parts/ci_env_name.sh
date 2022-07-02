@@ -107,12 +107,6 @@ if [ -n "${TRAVIS+x}" ]; then
     return
 fi
 
-if [ -n "${WERCKER_RUN_URL+x}" ]; then
-    export WERCKER=true
-    export CI_ENV_NAME="Wercker"
-    return
-fi
-
 
 if [ -z "${CI+x}" ]; then
     export CI_ENV_NAME="local"

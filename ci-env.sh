@@ -413,17 +413,6 @@ if [ -n "${TRAVIS_BRANCH+x}" ]; then
     return
 fi
 
-# Wercker
-if [ -n "${WERCKER_GIT_BRANCH+x}" ]; then
-    if [ -z "${CI_ENV_GIT_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BRANCH="${WERCKER_GIT_BRANCH}"
-    fi
-    if [ -z "${CI_ENV_GIT_BASE_BRANCH+x}" ]; then
-        export CI_ENV_GIT_BASE_BRANCH="${WERCKER_GIT_BRANCH}"
-    fi
-    return
-fi
-
 }
 
 ci_env_git_commit() {
@@ -512,11 +501,6 @@ fi
 
 if [ -n "${TRAVIS_COMMIT+x}" ]; then
     export CI_ENV_GIT_COMMIT="${TRAVIS_COMMIT}"
-    return
-fi
-
-if [ -n "${WERCKER_CI_ENV_GIT_COMMIT+x}" ]; then
-    export CI_ENV_GIT_COMMIT="${WERCKER_CI_ENV_GIT_COMMIT}"
     return
 fi
 
@@ -724,16 +708,6 @@ if [ -n "${TRAVIS+x}" ]; then
     return
 fi
 
-if [ -n "${WERCKER_RUN_URL+x}" ]; then
-    # if [ -n "${TRAVIS_TAG+x}" ]; then
-    #     export CI_ENV_GIT_TAG=true
-    #     export CI_ENV_GIT_TAG_NAME="${TRAVIS_TAG}"
-    # else
-        export CI_ENV_GIT_TAG=false
-    # fi
-    return
-fi
-
 
 if [ -z "${CI_ENV_GIT_TAG+x}" ]; then
     export CI_ENV_GIT_TAG=false
@@ -846,12 +820,6 @@ fi
 
 if [ -n "${TRAVIS+x}" ]; then
     export CI_ENV_NAME="Travis CI"
-    return
-fi
-
-if [ -n "${WERCKER_RUN_URL+x}" ]; then
-    export WERCKER=true
-    export CI_ENV_NAME="Wercker"
     return
 fi
 
