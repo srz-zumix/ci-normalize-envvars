@@ -514,7 +514,7 @@ detect_git_commit() {
     fi
 }
 
-detect_git_commit
+detect_git_commit "$@"
 export CI_ENV_CI_ENV_GIT_COMMIT
 }
 
