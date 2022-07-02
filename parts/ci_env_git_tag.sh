@@ -30,9 +30,9 @@ detect_git_tag() {
     fi
 
     if [ -n "${AZURE_HTTP_USER_AGENT+x}" ]; then
-        if echo ${BUILD_SOURCEBRANCH} | grep -q refs/tags/; then
+        if echo "${BUILD_SOURCEBRANCH}" | grep -q refs/tags/; then
             CI_ENV_GIT_TAG=true
-            CI_ENV_GIT_TAG_NAME=$(echo ${BUILD_SOURCEBRANCH} | sed -e s@refs/.*/@@g)
+            CI_ENV_GIT_TAG_NAME=$(echo "${BUILD_SOURCEBRANCH}" | sed -e s@refs/.*/@@g)
         else
             CI_ENV_GIT_TAG=false
         fi
@@ -90,7 +90,7 @@ detect_git_tag() {
     fi
 
     if [ -n "${CI_NAME+x}" ]; then
-        if [ ${CI_NAME} = "codeship" ]; then
+        if [ "${CI_NAME}" = "codeship" ]; then
             # if [ -n "${CIRRUS_TAG+x}" ]; then
             #     CI_ENV_GIT_TAG=true
             #     CI_ENV_GIT_TAG_NAME="${CIRRUS_TAG}"
@@ -112,9 +112,9 @@ detect_git_tag() {
     fi
 
     if [ -n "${GITHUB_ACTIONS+x}" ]; then
-        if echo ${GITHUB_REF} | grep -q refs/tags/; then
+        if echo "${GITHUB_REF}" | grep -q refs/tags/; then
             CI_ENV_GIT_TAG=true
-            CI_ENV_GIT_TAG_NAME=$(echo ${GITHUB_REF} | sed -e s@refs/.*/@@g)
+            CI_ENV_GIT_TAG_NAME=$(echo "${GITHUB_REF}" | sed -e s@refs/.*/@@g)
         else
             CI_ENV_GIT_TAG=false
         fi

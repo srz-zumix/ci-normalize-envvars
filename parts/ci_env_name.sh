@@ -53,7 +53,7 @@ detect_git_tag() {
     fi
 
     if [ -n "${CI_NAME+x}" ]; then
-        if [ ${CI_NAME} = "codeship" ]; then
+        if [ "${CI_NAME}" = "codeship" ]; then
             CODESHIP=true
             export CODESHIP
             CI_ENV_NAME="CodeShip"
@@ -77,7 +77,7 @@ detect_git_tag() {
     fi
 
     if [ -n "${BUILD_URL+x}" ]; then
-        if echo ${BUILD_URL} | grep -q peakflow; then
+        if echo "${BUILD_URL}" | grep -q peakflow; then
             PEAKFLOW=true
             export PEAKFLOW
             CI_ENV_NAME="Peakflow"
@@ -86,7 +86,7 @@ detect_git_tag() {
     fi
 
     if [ -n "${CI+x}" ]; then
-        if [ ${CI} = "razorops" ]; then
+        if [ "${CI}" = "razorops" ]; then
             RAZOROPS=true
             export RAZOROPS
             CI_ENV_NAME="Razorops"
