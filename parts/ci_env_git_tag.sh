@@ -193,16 +193,6 @@ if [ -n "${TRAVIS+x}" ]; then
     return
 fi
 
-if [ -n "${WERCKER_RUN_URL+x}" ]; then
-    # if [ -n "${TRAVIS_TAG+x}" ]; then
-    #     export CI_ENV_GIT_TAG=true
-    #     export CI_ENV_GIT_TAG_NAME="${TRAVIS_TAG}"
-    # else
-        export CI_ENV_GIT_TAG=false
-    # fi
-    return
-fi
-
 
 if [ -z "${CI_ENV_GIT_TAG+x}" ]; then
     export CI_ENV_GIT_TAG=false

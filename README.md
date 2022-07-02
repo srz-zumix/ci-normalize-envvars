@@ -20,7 +20,6 @@ Normalize environment variables for CI service
 * [Scrutinizer][]
 * [Semaphore][]
 * [Travis CI][]
-* [wercker][]
 
 ## Environment Variable
 
@@ -55,4 +54,3 @@ Normalize environment variables for CI service
 [Scrutinizer]:https://scrutinizer-ci.com
 [Semaphore]:https://semaphoreci.com/product
 [Travis CI]:https://travis-ci.com/
-[wercker]:http://www.wercker.com/

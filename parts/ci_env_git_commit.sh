@@ -87,11 +87,6 @@ if [ -n "${TRAVIS_COMMIT+x}" ]; then
     return
 fi
 
-if [ -n "${WERCKER_CI_ENV_GIT_COMMIT+x}" ]; then
-    export CI_ENV_GIT_COMMIT="${WERCKER_CI_ENV_GIT_COMMIT}"
-    return
-fi
-
 
 if [ -z "${CI_ENV_GIT_COMMIT+x}" ]; then
     export CI_ENV_GIT_COMMIT=$(git rev-parse HEAD)
